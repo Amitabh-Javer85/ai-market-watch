@@ -235,7 +235,7 @@ function mountChart() {
     "symbol-overview",
     {
       ...common,
-      symbols: [[c.name, s + "|1D"]],
+      symbols: [[c.name, s + "|1M"]],
       chartOnly: false,
       showVolume: false,
       showMA: false,
@@ -377,3 +377,4 @@ renderWatch();
 loadMetrics().catch(() => {
   el("status").textContent = "Peer comparison unavailable. Refresh to retry.";
 });
+
