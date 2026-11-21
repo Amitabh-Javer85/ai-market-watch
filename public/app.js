@@ -316,7 +316,10 @@ function renderWatch(force = false) {
   );
 }
 async function loadMetrics() {
-  const r = await fetch("./metrics.json", { cache: "no-store" });
+  const r = await fetch("./metrics.json", {
+    cache: "no-store",
+    signal: AbortSignal.timeout(10000),
+  });
   if (!r.ok) throw Error("Metrics unavailable");
   const m = await r.json();
   if (
