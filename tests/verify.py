@@ -119,9 +119,13 @@ def offline_checks(browser, url):
     page.get_by_role("button", name="Clear search").click()
     expect(page.locator("#search")).to_be_focused()
     page.locator("#refresh").focus()
+    widget_config(page, "#quotes")
+    page.evaluate("window.beforeRefresh = [...document.querySelectorAll('.widget iframe')]")
     before = len(upstream)
     page.keyboard.press("Enter")
-    page.wait_for_function("document.querySelector('#chart iframe[data-config]') !== null")
+    page.wait_for_function("""window.beforeRefresh.every(frame => !frame.isConnected) &&
+        document.querySelector('#chart iframe[data-config]') &&
+        document.querySelector('#quotes iframe[data-config]')""")
     assert len(upstream) >= before + 2, "Refresh must reload both external widgets"
     expect(page.locator("#company")).to_have_value("AVGO")
     page.reload(wait_until="domcontentloaded")
