@@ -75,11 +75,11 @@ function renderMetrics() {
       ? (ranked[Math.floor(n / 2)].pct + ranked[Math.floor((n - 1) / 2)].pct) /
         2
       : null;
-  el("median").textContent = n ? fmt(median) : "â€”";
+  el("median").textContent = n ? fmt(median) : "—";
   el("median").className = n ? tone(median) : "";
   el("breadth").textContent = n
     ? ranked.filter((c) => c.pct > 0).length + " / " + n
-    : "â€”";
+    : "—";
   el("coverage").textContent = n + " of " + list.length + " companies covered";
   const leader = ranked.reduce(
     (a, b) => (!a || Math.abs(b.pct) > Math.abs(a.pct) ? b : a),
@@ -91,15 +91,15 @@ function renderMetrics() {
     move.className = tone(leader.pct);
     move.textContent = fmt(leader.pct);
     el("leader").append(leader.ticker + " ", move);
-  } else el("leader").textContent = "â€”";
+  } else el("leader").textContent = "—";
   el("session").textContent = metrics
-    ? "Peer comparison Â· " + dateLabel(metrics.date)
+    ? "Peer comparison · " + dateLabel(metrics.date)
     : "Peer comparison unavailable";
   el("basis").textContent = metrics
     ? dateLabel(metrics.previousDate) +
-      " â†’ " +
+      " → " +
       dateLabel(metrics.date) +
-      " Â· Includes extended hours."
+      " · Includes extended hours."
     : "No comparison available.";
   if (
     metrics &&
@@ -160,7 +160,7 @@ function mount(id, type, config, link, attribution) {
   a.rel = "noopener noreferrer";
   a.textContent = attribution;
   const message = document.createElement("span");
-  message.textContent = "Loading market dataâ€¦";
+  message.textContent = "Loading market data…";
   container.append(surface);
   embed.append(container);
   foot.append(a, message);
@@ -341,7 +341,7 @@ async function refresh() {
   if (refreshing) return;
   refreshing = true;
   el("refresh").disabled = true;
-  el("refresh").textContent = "Checkingâ€¦";
+  el("refresh").textContent = "Checking…";
   const last = metrics?.date;
   mountChart();
   renderWatch(true);
@@ -361,7 +361,7 @@ async function refresh() {
       : "Peer comparison unavailable. Refresh to retry.";
   } finally {
     el("refresh").disabled = false;
-    el("refresh").textContent = "â†»  Refresh";
+    el("refresh").textContent = "Refresh";
     refreshing = false;
   }
 }
