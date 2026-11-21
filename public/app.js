@@ -235,6 +235,8 @@ function mountChart() {
     "symbol-overview",
     {
       ...common,
+      colorTheme: "dark",
+      backgroundColor: "#0b1f3b",
       symbols: [[c.name, s + "|1M"]],
       chartOnly: false,
       showVolume: false,
@@ -247,7 +249,7 @@ function mountChart() {
       fontFamily: "system-ui, sans-serif",
       lineType: 0,
       chartType: "area",
-      lineColor: "#2563eb",
+      lineColor: "#60a5fa",
       topColor: "rgba(96,165,250,0.30)",
       bottomColor: "rgba(96,165,250,0.02)",
       dateRanges: ["1m|1D", "3m|1D", "6m|1D", "12m|1D"],
@@ -359,7 +361,7 @@ async function refresh() {
       : "Peer comparison unavailable. Refresh to retry.";
   } finally {
     el("refresh").disabled = false;
-    el("refresh").textContent = "↻  Refresh";
+    el("refresh").textContent = "Refresh";
     refreshing = false;
   }
 }
