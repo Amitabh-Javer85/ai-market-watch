@@ -116,9 +116,11 @@ jobs:
               raise SystemExit("Expected revision did not reach the public edge")
           with urlopen(base, timeout=15) as response:
               assert "text/html" in response.headers["Content-Type"]
-          with urlopen(base + "metrics.json", timeout=15) as response:
+          with urlopen(f"{base}metrics.json?rev={revision}", timeout=15) as response:
               data = json.load(response)
               assert set(data["changes"]) == set("NVDA AMD AVGO MSFT GOOGL AMZN IBM PLTR".split())
+          with open("public/metrics.json") as committed:
+              assert data == json.load(committed), "Public metrics differ from the tested release"
           with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
               print(f"Published [{revision[:12]}]({base}) · metrics dated {data['date']}", file=summary)
           PY
