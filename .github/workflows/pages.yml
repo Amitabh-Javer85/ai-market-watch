@@ -1,0 +1,134 @@
+name: Verify and publish dashboard
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Dashboard tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    outputs:
+      revision: ${{ steps.revision.outputs.sha }}
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && 'main' || github.sha }}
+          persist-credentials: false
+      - id: revision
+        run: echo "sha=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Set up browser tests
+        run: |
+          python -m pip install -r tests/requirements.txt
+          python -m playwright install --with-deps chromium
+      - name: Verify calculations and ingestion
+        run: python -m unittest discover -s tests
+      - name: Exercise the dashboard on a project URL
+        run: python tests/verify.py
+      - name: Stage verified files and release identity
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        env:
+          REVISION: ${{ steps.revision.outputs.sha }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/site"
+          cp -R public/. "$RUNNER_TEMP/site/"
+          jq -n --arg revision "$REVISION" '{version:"10.0",revision:$revision}' > "$RUNNER_TEMP/site/version.json"
+      - name: Upload one-day Pages artifact
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4
+        with:
+          path: ${{ runner.temp }}/site
+          retention-days: 1
+
+  deploy:
+    name: Publish main
+    if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publish.outputs.page_url }}
+    outputs:
+      url: ${{ steps.publish.outputs.page_url }}
+    steps:
+      - name: Check that the verified revision is still current
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REVISION: ${{ needs.verify.outputs.revision }}
+        run: test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)" = "$REVISION"
+      - id: publish
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4
+
+  smoke:
+    name: Check public release
+    needs: [verify, deploy]
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+        with:
+          ref: ${{ needs.verify.outputs.revision }}
+          persist-credentials: false
+      - name: Verify anonymous HTTPS routes and release SHA
+        env:
+          DEPLOY_URL: ${{ needs.deploy.outputs.url }}
+          REVISION: ${{ needs.verify.outputs.revision }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import time
+          from urllib.request import urlopen
+
+          base = os.environ["DEPLOY_URL"].rstrip("/") + "/"
+          revision = os.environ["REVISION"]
+          if not base.startswith("https://"):
+              raise SystemExit("Expected a public HTTPS URL")
+          for attempt in range(12):
+              try:
+                  with urlopen(f"{base}version.json?rev={revision}", timeout=10) as response:
+                      release = json.load(response)
+                  if release == {"version": "10.0", "revision": revision}:
+                      break
+              except (OSError, ValueError) as exc:
+                  print(f"Release verification attempt {attempt + 1}: {exc}")
+              time.sleep(5)
+          else:
+              raise SystemExit("Expected revision did not reach the public edge")
+          with urlopen(base, timeout=15) as response:
+              assert "text/html" in response.headers["Content-Type"]
+          with urlopen(base + "metrics.json", timeout=15) as response:
+              data = json.load(response)
+              assert set(data["changes"]) == set("NVDA AMD AVGO MSFT GOOGL AMZN IBM PLTR".split())
+          with open(os.environ["GITHUB_STEP_SUMMARY"], "a") as summary:
+              print(f"Published [{revision[:12]}]({base}) · metrics dated {data['date']}", file=summary)
+          PY
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - name: Verify the public dashboard and its market-data provider
+        env:
+          DEPLOY_URL: ${{ needs.deploy.outputs.url }}
+        run: |
+          python -m pip install -r tests/requirements.txt
+          python -m playwright install --with-deps chromium
+          python tests/verify.py --url "$DEPLOY_URL" --live
