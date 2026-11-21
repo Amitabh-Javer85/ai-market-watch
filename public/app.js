@@ -80,7 +80,7 @@ function mount(id,type,config,link,attribution){
   const script=document.createElement('script');script.async=true;script.src='https://s3.tradingview.com/external-embedding/embed-widget-'+type+'.js';
   script.textContent=JSON.stringify(config);script.onerror=fail;container.append(script);
 }
-const common={width:'100%',height:'100%',colorTheme:'dark',locale:'en',isTransparent:true};
+const common={width:'100%',height:'100%',colorTheme:'dark',locale:'en',isTransparent:false,backgroundColor:'#17283b'};
 function mountChart(){
   const c=stock(selected),s=c.exchange+':'+c.ticker;
   mount('chart','symbol-overview',{...common,symbols:[[c.name,s+'|1D']],chartOnly:false,showVolume:false,showMA:false,hideDateRanges:false,hideMarketStatus:false,hideSymbolLogo:false,scalePosition:'right',scaleMode:'Normal',fontFamily:'system-ui, sans-serif',lineType:0,chartType:'area',lineColor:'#88bfff',topColor:'rgba(77,146,255,0.30)',bottomColor:'rgba(77,146,255,0.02)',dateRanges:['1m|1D','3m|1D','6m|1D','12m|1D']},
@@ -113,4 +113,5 @@ el('company').onchange=()=>choose(el('company').value);
 el('search').oninput=()=>renderWatch();
 el('refresh').onclick=refresh;renderPicker();renderMetrics();mountChart();renderWatch();
 loadMetrics().catch(()=>{el('status').textContent='Peer comparison unavailable. Refresh to retry.'});
+
 
