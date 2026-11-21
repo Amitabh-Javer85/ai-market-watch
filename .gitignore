@@ -1,0 +1,7 @@
+snapshot.json
+snapshot.tmp
+dashboard-preview.png
+graphify-out/
+__pycache__/
+test-results/
+node_modules/
