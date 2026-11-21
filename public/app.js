@@ -222,10 +222,10 @@ function mount(id, type, config, link, attribution) {
 const common = {
   width: "100%",
   height: "100%",
-  colorTheme: "dark",
+  colorTheme: "light",
   locale: "en",
   isTransparent: false,
-  backgroundColor: "#17283b",
+  backgroundColor: "#f0f7ff",
 };
 function mountChart() {
   const c = stock(selected),
@@ -247,9 +247,9 @@ function mountChart() {
       fontFamily: "system-ui, sans-serif",
       lineType: 0,
       chartType: "area",
-      lineColor: "#88bfff",
-      topColor: "rgba(77,146,255,0.30)",
-      bottomColor: "rgba(77,146,255,0.02)",
+      lineColor: "#2563eb",
+      topColor: "rgba(96,165,250,0.30)",
+      bottomColor: "rgba(96,165,250,0.02)",
       dateRanges: ["1m|1D", "3m|1D", "6m|1D", "12m|1D"],
     },
     "https://www.tradingview.com/symbols/" + c.exchange + "-" + c.ticker + "/",
