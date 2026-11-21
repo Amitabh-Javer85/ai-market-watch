@@ -75,11 +75,11 @@ function renderMetrics() {
       ? (ranked[Math.floor(n / 2)].pct + ranked[Math.floor((n - 1) / 2)].pct) /
         2
       : null;
-  el("median").textContent = n ? fmt(median) : "—";
+  el("median").textContent = n ? fmt(median) : "â€”";
   el("median").className = n ? tone(median) : "";
   el("breadth").textContent = n
     ? ranked.filter((c) => c.pct > 0).length + " / " + n
-    : "—";
+    : "â€”";
   el("coverage").textContent = n + " of " + list.length + " companies covered";
   const leader = ranked.reduce(
     (a, b) => (!a || Math.abs(b.pct) > Math.abs(a.pct) ? b : a),
@@ -91,15 +91,15 @@ function renderMetrics() {
     move.className = tone(leader.pct);
     move.textContent = fmt(leader.pct);
     el("leader").append(leader.ticker + " ", move);
-  } else el("leader").textContent = "—";
+  } else el("leader").textContent = "â€”";
   el("session").textContent = metrics
-    ? "Peer comparison · " + dateLabel(metrics.date)
+    ? "Peer comparison Â· " + dateLabel(metrics.date)
     : "Peer comparison unavailable";
   el("basis").textContent = metrics
     ? dateLabel(metrics.previousDate) +
-      " → " +
+      " â†’ " +
       dateLabel(metrics.date) +
-      " · Includes extended hours."
+      " Â· Includes extended hours."
     : "No comparison available.";
   if (
     metrics &&
@@ -160,7 +160,7 @@ function mount(id, type, config, link, attribution) {
   a.rel = "noopener noreferrer";
   a.textContent = attribution;
   const message = document.createElement("span");
-  message.textContent = "Loading market data…";
+  message.textContent = "Loading market dataâ€¦";
   container.append(surface);
   embed.append(container);
   foot.append(a, message);
@@ -235,6 +235,8 @@ function mountChart() {
     "symbol-overview",
     {
       ...common,
+      colorTheme: "dark",
+      backgroundColor: "#0b1f3b",
       symbols: [[c.name, s + "|1M"]],
       chartOnly: false,
       showVolume: false,
@@ -247,7 +249,7 @@ function mountChart() {
       fontFamily: "system-ui, sans-serif",
       lineType: 0,
       chartType: "area",
-      lineColor: "#2563eb",
+      lineColor: "#60a5fa",
       topColor: "rgba(96,165,250,0.30)",
       bottomColor: "rgba(96,165,250,0.02)",
       dateRanges: ["1m|1D", "3m|1D", "6m|1D", "12m|1D"],
@@ -339,7 +341,7 @@ async function refresh() {
   if (refreshing) return;
   refreshing = true;
   el("refresh").disabled = true;
-  el("refresh").textContent = "Checking…";
+  el("refresh").textContent = "Checkingâ€¦";
   const last = metrics?.date;
   mountChart();
   renderWatch(true);
@@ -359,7 +361,7 @@ async function refresh() {
       : "Peer comparison unavailable. Refresh to retry.";
   } finally {
     el("refresh").disabled = false;
-    el("refresh").textContent = "↻  Refresh";
+    el("refresh").textContent = "â†»  Refresh";
     refreshing = false;
   }
 }
