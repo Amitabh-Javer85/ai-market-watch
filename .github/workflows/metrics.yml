@@ -1,0 +1,52 @@
+name: Refresh published market indicators
+
+on:
+  schedule:
+    - cron: '17 7,19 * * *'
+  workflow_dispatch:
+
+permissions: {}
+
+concurrency:
+  group: public-market-indicators
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    permissions:
+      contents: write
+      actions: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+      - name: Verify reducer and retrieve aligned sessions
+        run: |
+          python3 -m unittest discover -s tests -p test_metrics.py -v
+          python3 tools/metrics.py
+      - name: Commit changes
+        run: |
+          if ! git diff --quiet -- public/metrics.json; then
+            git config user.name 'github-actions[bot]'
+            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+            git add -- public/metrics.json
+            git commit -m "Refresh dated watchlist indicators"
+            git push origin HEAD:main
+          fi
+      - name: Reconcile Pages with the latest published indicators
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
+        run: |
+          set -eu
+          public_url="https://${OWNER,,}.github.io/${REPO#*/}/metrics.json"
+          if curl -fsS --max-time 20 "$public_url" -o "$RUNNER_TEMP/live.json" && cmp -s public/metrics.json "$RUNNER_TEMP/live.json"; then
+            echo "Published indicators are current."
+          else
+            # Pushes made with GITHUB_TOKEN do not trigger downstream push workflows.
+            gh workflow run pages.yml --ref main
+          fi

@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#0c1727" />
+    <meta
+      name="description"
+      content="Follow eight AI equities, compare session performance and explore company price history."
+    />
+    <title>AI Market Watch · Market overview</title>
+    <link rel="icon" href="./mark.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./style.css" />
+    <script defer src="./app.js"></script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to market overview</a>
+    <header>
+      <div class="frame mast">
+        <a class="brand" href="./"
+          ><img src="./mark.svg" width="32" height="32" alt="" />AI Market
+          Watch</a
+        ><span class="mastdetail">US EQUITIES <i></i> USD</span>
+      </div>
+    </header>
+    <main class="frame" id="main">
+      <div class="heading">
+        <div>
+          <h1>Market overview</h1>
+          <div id="session" class="muted">Loading session…</div>
+        </div>
+        <div class="controls">
+          <label
+            ><span class="sr">Company group</span
+            ><select id="group">
+              <option value="all">All companies</option>
+              <option value="chips">Chips</option>
+              <option value="cloud">Cloud platforms</option>
+              <option value="software">Enterprise software</option>
+            </select></label
+          ><button class="refresh" id="refresh">↻ &nbsp; Refresh</button>
+        </div>
+      </div>
+      <p id="status" role="status" aria-live="polite"></p>
+      <section aria-label="Watchlist summary" class="summary glass">
+        <div>
+          <h2>Median daily move</h2>
+          <strong id="median">—</strong><small>vs. previous session</small>
+        </div>
+        <div>
+          <h2>Advanced / covered</h2>
+          <strong id="breadth">—</strong
+          ><small id="coverage">Companies with comparable prices</small>
+        </div>
+        <div>
+          <h2>Largest move</h2>
+          <strong id="leader">—</strong><small>By absolute daily change</small>
+        </div>
+      </section>
+      <div class="analysis">
+        <section class="glass panel chart-panel">
+          <div class="top">
+            <div>
+              <div class="eyebrow">Price history</div>
+              <h2 id="companyName">NVIDIA</h2>
+            </div>
+            <label
+              ><span class="sr">Selected company</span
+              ><select id="company"></select
+            ></label>
+          </div>
+          <div id="chart" class="widget chart"></div>
+        </section>
+        <section class="glass panel">
+          <div class="eyebrow">Peer comparison</div>
+          <h2>Daily movers</h2>
+          <div id="movers" class="movers"></div>
+          <div id="basis" class="caption"></div>
+        </section>
+      </div>
+      <section class="glass panel watch">
+        <div class="top">
+          <div>
+            <div class="eyebrow">Market quotes</div>
+            <h2>Watchlist</h2>
+          </div>
+          <label
+            ><span class="sr">Find company</span
+            ><input
+              id="search"
+              type="search"
+              placeholder="Find company…"
+              autocomplete="off"
+          /></label>
+        </div>
+        <div id="picks" class="picks" aria-label="Choose a company"></div>
+        <div id="quotes" class="widget quotes"></div>
+      </section>
+      <footer>
+        <details>
+          <summary>Sources &amp; timing</summary>
+          <p>
+            Quotes and chart history come directly from TradingView. Feed venues
+            and delays can differ by instrument. Refresh reloads the quote
+            panels and checks for an updated peer comparison.
+          </p>
+          <p>
+            Peer comparisons use GetMarketHistory’s unadjusted daily bars,
+            including extended hours. They can lag current quotes by about two
+            days. Corporate actions can affect the reported moves. A group’s
+            median, breadth and leader use companies with prices on both
+            displayed dates.
+          </p>
+          <a href="https://www.tradingview.com/widget-docs/faq/data/"
+            >TradingView market data</a
+          >
+          ·
+          <a
+            href="https://getmarkethistory.com/docs/guides/historical-stock-market-data/"
+            >GetMarketHistory methodology</a
+          >
+        </details>
+        <span>AI Market Watch <b>v10.0</b></span>
+      </footer>
+      <noscript
+        >Enable JavaScript for quotes and charts, or
+        <a href="https://www.tradingview.com/markets/stocks-usa/"
+          >view US equities on TradingView</a
+        >.</noscript
+      >
+    </main>
+  </body>
+</html>
