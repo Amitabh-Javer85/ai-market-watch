@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "url": "https://amitabh-javer85.github.io/ai-market-watch/",
+  "window_title": "AI Market Watch",
+  "capture_seconds": 16,
+  "fps": 10,
+  "steps": [
+    {"action":"wait_for","selector":{"css":"#chart iframe"},"label":"Show the live market overview"},
+    {"action":"hold","seconds":2.1},
+    {"action":"click","selector":{"css":".mover[aria-label^='AMD ']"},"label":"Open AMD from Daily movers"},
+    {"action":"wait_for","selector":{"css":"#chart iframe[title^='AMD ']"},"label":"Show the AMD price chart"},
+    {"action":"hold","seconds":2.0},
+    {"action":"fill","selector":{"css":"#search"},"text":"Broadcom","label":"Find Broadcom in the watchlist"},
+    {"action":"wait_for","selector":{"role":"button","name":"Broadcom (AVGO)"},"label":"Show the filtered watchlist"},
+    {"action":"hold","seconds":2.2}
+  ]
+}
+

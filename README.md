@@ -3,6 +3,12 @@
 
 A public dashboard for NVIDIA, AMD, Broadcom, Microsoft, Alphabet, Amazon, IBM, and Palantir. Select a company to explore its price history, filter peers by industry, or refresh quotes without signing in.
 
+## Demo
+
+![AI Market Watch walkthrough showing the market overview, the AMD price chart, and a filtered search for Broadcom](demo/market-watch.gif)
+
+Recorded from the production dashboard with ScreenToGif. The [capture recipe](demo/walkthrough.json) can be replayed to record a fresh take.
+
 ## How to read the numbers
 - TradingView supplies quotes, changes, chart ranges and trading status inside its attributed embeds. Each instrument follows its provider venue and timing.
 - Median move, breadth, and daily movers use matched sessions from GetMarketHistory. The public snapshot contains derived percentages only. Its session date and extended-hours basis appear on screen. Prices are unadjusted; a split can affect comparisons. Source history may lag by roughly two days.
