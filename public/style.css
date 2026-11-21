@@ -60,7 +60,7 @@ button:disabled { cursor: wait; }
 input::placeholder { color: var(--muted); }
 .refresh {
   min-width: 112px;
-  background: linear-gradient(180deg, #356ff0, var(--accent) 54%, #1e54d2);
+  background: linear-gradient(180deg, #3169e6, var(--accent) 54%, #1e54d2);
   border-color: #1e52c8;
   color: #fff;
   font-weight: 650;
@@ -160,3 +160,4 @@ input { max-width: 174px; }
   .glass, .controls { background: var(--surface); backdrop-filter: none; }
   .chart-panel { background: var(--navy); }
 }
+
