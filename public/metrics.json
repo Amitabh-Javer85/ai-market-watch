@@ -1,16 +1,16 @@
 {
-  "date": "2026-11-20",
-  "previousDate": "2026-11-19",
+  "date": "2026-11-23",
+  "previousDate": "2026-11-20",
   "source": "GetMarketHistory",
   "basis": "Unadjusted · includes extended hours",
   "changes": {
-    "NVDA": -10.121,
-    "AMD": -7.0093,
-    "AVGO": -9.395,
-    "MSFT": -1.0891,
-    "GOOGL": -1.1452,
-    "AMZN": -2.0929,
-    "IBM": 1.1236,
-    "PLTR": -3.6216
+    "NVDA": 27.113,
+    "AMD": 1.9027,
+    "AVGO": -0.0642,
+    "MSFT": 0.3052,
+    "GOOGL": 4.856,
+    "AMZN": 1.6847,
+    "IBM": 3.5556,
+    "PLTR": 8.9629
   }
 }
