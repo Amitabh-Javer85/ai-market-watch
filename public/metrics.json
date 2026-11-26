@@ -4,13 +4,13 @@
   "source": "GetMarketHistory",
   "basis": "Unadjusted · includes extended hours",
   "changes": {
-    "NVDA": 27.113,
-    "AMD": 1.9027,
-    "AVGO": -0.0642,
-    "MSFT": 0.3052,
-    "GOOGL": 4.856,
-    "AMZN": 1.6847,
-    "IBM": 3.5556,
-    "PLTR": 8.9629
+    "NVDA": 31.2972,
+    "AMD": 7.0021,
+    "AVGO": 3.0805,
+    "MSFT": 1.6119,
+    "GOOGL": 6.2674,
+    "AMZN": 3.3608,
+    "IBM": 3.8556,
+    "PLTR": 10.9584
   }
 }
